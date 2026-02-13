@@ -238,7 +238,6 @@ body {
   0% { height: 0; }
   100% { height: 160px; }
 }
-
 .rose-stem {
   position: absolute;
   bottom: 0;
@@ -272,6 +271,7 @@ body {
   animation: bloomPetal 0.8s ease-out forwards;
   opacity: 0;
 }
+
 /* Rose leaves */
 @keyframes leafGrow {
   0% {
@@ -417,7 +417,6 @@ body {
   font-size: 15px;
   white-space: pre-wrap;
 }
-
 .continue-btn {
   background: var(--primary-action);
   color: #fff;
@@ -469,6 +468,7 @@ body {
   font-weight: 600;
   margin: 0;
 }
+
 /* Photo grid */
 .photo-grid {
   display: grid;
@@ -526,6 +526,8 @@ body {
   box-shadow: 0 4px 20px rgba(139, 74, 94, 0.1);
   padding: 14px;
   margin: 0 auto 20px;
+  width: 100%;
+  height: 40%;
 }
 
 .music-title {
@@ -533,9 +535,9 @@ body {
   opacity: 0.6;
   margin: 0 0 10px;
 }
-
 .music-placeholder {
   width: 100%;
+  height: 100%;
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, var(--secondary-action), var(--bg-color));
   border-radius: 8px;
@@ -648,36 +650,47 @@ body {
        <div class="photo-placeholder">
         <img src="1.jpg" alt="" class="pic"/>
        </div>
-       <p class="photo-label">Photo 1</p>
+       <p class="photo-label"> First night walk</p>
       </div>
       <div class="photo-frame">
        <div class="photo-placeholder">
          <img src="2.jpg" alt="" class="pic"/>
        </div>
-       <p class="photo-label">Photo 2</p>
+       <p class="photo-label">New year together</p>
       </div>
       <div class="photo-frame">
        <div class="photo-placeholder">
         <img src="3.jpg" alt="" class="pic"/>
        </div>
-       <p class="photo-label">Photo 3</p>
+       <p class="photo-label">Sunsets & You</p>
       </div>
       <div class="photo-frame">
        <div class="photo-placeholder">
         <img src="beach.jpg" alt="" class="pic" />
        </div>
-       <p class="photo-label">Photo 4</p>
+       <p class="photo-label">❤us❤</p>
       </div>
      </div><!-- Heart Divider -->
      <div class="heart-divider"><span>♡</span><span>♡</span><span>♡</span><span>♡</span><span>♡</span>
      </div><!-- Music Section -->
      <div class="music-container">
-      <p class="music-title">🎵 Our Song 🎵</p>
+      <p class="music-title"></p>
       <div class="music-placeholder">
-       🎶
+       <video width="100%" height="100" controls autoplay muted loop>
+        <source src="vid.mp4" type="video/mp4">
+      </video>
       </div>
-      <p class="music-note">Add your favorite song here</p>
-     </div><!-- Final Message -->
+      <p class="music-note">💟</p>
+     </div>
+     <div class="music-container">
+  <p class="music-title"></p>
+  <div class="music-placeholder">
+    <video width="100%" height="90%" controls autoplay muted loop>
+      <source src="vid2.mp4" type="video/mp4">
+    </video>
+  </div>
+  <p class="music-note">💟</p>
+</div><!-- Final Message -->
      <div class="final-message">
       "I'm always here for you" 💕
      </div><!-- Decorative Dudus -->
@@ -749,9 +762,7 @@ body {
     btn0.textContent = '0';
     btn0.addEventListener('click', () => enterPin('0'));
     pad.appendChild(btn0);
-
-    // Delete button
-    const delBtn = document.createElement('button');
+const delBtn = document.createElement('button');
     delBtn.className = 'pin-btn';
     delBtn.textContent = '⌫';
     delBtn.addEventListener('click', deletePin);
@@ -775,8 +786,42 @@ body {
   }
 
   function updatePinDisplay() {
-    const dots = document.qu
-// Rose animation
+    const dots = document.querySelectorAll('.pin-dot');
+    dots.forEach((dot, i) => {
+      if (i < enteredPin.length) {
+        dot.classList.add('filled');
+      } else {
+        dot.classList.remove('filled');
+      }
+    });
+  }
+
+  function checkPin() {
+    if (enteredPin === PASSWORD) {
+      document.getElementById('pin-error').classList.remove('show');
+      goToPage(2);
+    } else {
+      document.getElementById('pin-error').classList.add('show');
+      const display = document.getElementById('pin-display');
+      display.classList.add('shake');
+      setTimeout(() => { display.classList.remove('shake'); }, 400);
+      enteredPin = "";
+      updatePinDisplay();
+    }
+  }
+function goToPage(num) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page' + num);
+    if (target) {
+      setTimeout(() => { target.classList.add('active'); }, 50);
+    }
+    currentPage = num;
+    if (num === 2) {
+      setTimeout(startRoseAnimation, 200);
+    }
+  }
+
+  // Rose animation
   function startRoseAnimation() {
     const scene = document.getElementById('rose-scene');
     scene.innerHTML = '';
@@ -812,8 +857,7 @@ body {
       { rot: '270deg', x: -18, y: -2, w: 24, h: 28 },
       { rot: '315deg', x: -12, y: -12, w: 26, h: 30 }
     ];
-
-    setTimeout(() => {
+setTimeout(() => {
       const centerX = 100;
       const centerY = 80;
       petalData.forEach((p, i) => {
@@ -855,7 +899,7 @@ body {
   envelopeBtn.addEventListener('click', () => {
     document.getElementById('letter-overlay').classList.add('open');
   });
-  envelopeBtn.addEventListener('keydown', (e) => {
+envelopeBtn.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       document.getElementById('letter-overlay').classList.add('open');
@@ -904,4 +948,16 @@ body {
         ["letter_title", config.letter_title || defaultConfig.letter_title],
         ["letter_message", config.letter_message || defaultConfig.letter_message],
         ["letter_signature", config.letter_signature || defaultConfig.letter_signature],
-        [
+        ["gallery_title", config.gallery_title || defaultConfig.gallery_title]
+      ])
+    });
+  }
+
+  // Initialize
+  initPinPad();
+  applyConfig(defaultConfig);
+
+})();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ccde49b3472fe1e',t:'MTc3MDkxODI1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
